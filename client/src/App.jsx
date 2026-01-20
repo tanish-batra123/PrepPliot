@@ -8,6 +8,8 @@ import { Signin } from "./pages/signin";
 import { Question } from "./pages/Question";
 import { Upgrad } from "./pages/Upgrad";
 import { Home } from "./pages/Home";
+import {InterviewRoom} from "./pages/InterviewRoom";
+import { StartInterview } from "./pages/StartInterview";
 // import { Skeleton } from "./components/ui/skeleton";
 
 export const App = () => {
@@ -38,11 +40,15 @@ export const App = () => {
 
     <Route path="question" element={<Question />} />
     <Route path="upgrad" element={<Upgrad />} />
+    <Route path="/interview/:mockId" element={<InterviewRoom />} />
+    <Route path="/start/:mockId" element={<StartInterview/>}/>
 
   </Route>
 
   <Route path="/signup/*" element={<Signup />} />
   <Route path="/signin/*" element={<Signin />} />
+ 
+
 </Routes>
 
   );

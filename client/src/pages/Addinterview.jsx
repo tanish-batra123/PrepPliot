@@ -8,8 +8,15 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@clerk/clerk-react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export const Addinterview = () => {
+
+export const Addinterview =() => {
+
+  const navigate=useNavigate()
+  const { getToken } = useAuth(); 
   const [isOpen, setIsopen] = useState(false);
   const[value,setvalue]=useState({
     jobPosition:"",
@@ -24,22 +31,46 @@ export const Addinterview = () => {
     }))
 
   }
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(value); 
+
+    try {
+      const token =await getToken();
+       const res = await axios.post(
+      "http://localhost:3000/api/mock/create",
+      {
+        jobPosition: value.jobPosition,
+        jobDescription: value.jobDescription,
+        experience: Number(value.yearOfExperience),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      }
+    );
+
+     console.log("Interview created:", res.data);
+     navigate(`/interview/${res.data.data.mockId}`)
+
+    
     setvalue({
-      jobPosition:"",
-    jobDescription:"",
-    yearOfExperience:"",
-    })
+      jobPosition: "",
+      jobDescription: "",
+      yearOfExperience: "",
+    });
     setIsopen(false);
+      
+    } catch (error) {
+      console.error("Error creating interview:", error);
+    }
   };
 
-  return (
+  return (                                                                                                 
     <div>
       {/* Card */}
       <div
-        className="p-10 border-2 border-dashed rounded-lg bg-secondary w-[280px] h-[160px]
+        className="p-8 border-2 border-dashed rounded-lg bg-secondary w-[280px] h-[160px]
         flex flex-col items-center justify-center cursor-pointer hover:border-primary transition ml-10"
         onClick={() => setIsopen(true)}
       >
